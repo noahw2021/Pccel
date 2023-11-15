@@ -147,6 +147,7 @@ void EmuShutdown(void) {
 void EmuVideoThread(void) {
 	SDL_Event Event;
 	BOOLEAN Quit = 0;
+	PPL2_INTERRUPT Interrupt;
 	while (!Quit) {
 		while (SDL_PollEvent(&Event)) {
 			if (EmuCtx->EmuPauseDrawing)
@@ -160,11 +161,31 @@ void EmuVideoThread(void) {
 			if (Event.type == SDL_KEYDOWN) {
 				EmuCtx->EmuKeyState[Event.key.keysym.scancode] = 1;
 				EmuCtx->EmuKeyStateChange[Event.key.keysym.scancode] = 1;
+				
+				if (EmuCtx->CpuInterruptCount == EmuCtx->CpuInterruptCountMax) {
+					EmuCtx->CpuInterruptCountMax += 64;
+					EmuCtx->CpuInterrupts = realloc(EmuCtx->CpuInterrupts, sizeof(PPL2_INTERRUPT) *
+						EmuCtx->CpuInterruptCountMax);
+				}
+
+				Interrupt = &EmuCtx->CpuInterrupts[EmuCtx->CpuInterruptCount++];
+				Interrupt->Argument = 0x00;
+				Interrupt->Interrupt = EmuCtx->KeybData.InterruptKeyDown;
 			}
 
 			if (Event.type == SDL_KEYUP) {
 				EmuCtx->EmuKeyState[Event.key.keysym.scancode] = 0;
 				EmuCtx->EmuKeyStateChange[Event.key.keysym.scancode] = 1;
+
+				if (EmuCtx->CpuInterruptCount == EmuCtx->CpuInterruptCountMax) {
+					EmuCtx->CpuInterruptCountMax += 64;
+					EmuCtx->CpuInterrupts = realloc(EmuCtx->CpuInterrupts, sizeof(PPL2_INTERRUPT) *
+						EmuCtx->CpuInterruptCountMax);
+				}
+
+				Interrupt = &EmuCtx->CpuInterrupts[EmuCtx->CpuInterruptCount++];
+				Interrupt->Argument = 0x00;
+				Interrupt->Interrupt = EmuCtx->KeybData.InterruptKeyUp;
 			}
 		}
 

@@ -53,3 +53,8 @@ void CciInterruptSetCSM(__int64 CSMHandler) {
 	Ctx->System.CSMHandler = CSMHandler;
 	return;
 }
+
+void CciSetHaltFlag(void) {
+	Ctx->Flags |= 0x08;
+	return;
+}
