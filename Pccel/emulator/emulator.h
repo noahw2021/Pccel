@@ -15,7 +15,7 @@ PLASM2 Compiled C Emulation Layer
 #define EMUARG_RAMSIZE 1048576
 #define EMUARG_INTTMNS 10000
 #define EMUARG_CLCKINT 0x00
-#define EMUARG_FDISKNM "pccel_disk.bin"
+#define EMUARG_FDISKNM "pccel_disk00000.bin"
 
 #define DEVTYPE_KB			0x10000001
 #define DEVTYPE_MOUSE		0x10000002

@@ -38,6 +38,21 @@
     <ClCompile Include="emulator\emu_fdisk.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="emulator\emu_mmu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exports\exp_init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exports\exp_memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exports\exp_devices.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exports\exp_ints.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

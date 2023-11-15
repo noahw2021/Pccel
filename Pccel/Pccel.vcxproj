@@ -146,8 +146,13 @@
     <ClCompile Include="dllmain.c" />
     <ClCompile Include="emulator\emu_fdisk.c" />
     <ClCompile Include="emulator\emu_keyb.c" />
+    <ClCompile Include="emulator\emu_mmu.c" />
     <ClCompile Include="emulator\emu_start.c" />
     <ClCompile Include="emulator\emu_video.c" />
+    <ClCompile Include="exports\exp_devices.c" />
+    <ClCompile Include="exports\exp_init.c" />
+    <ClCompile Include="exports\exp_ints.c" />
+    <ClCompile Include="exports\exp_memory.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

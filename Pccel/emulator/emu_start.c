@@ -100,6 +100,27 @@ void EmuInit(void) {
 	EmuCtx->CpuInterruptCountMax = 256;
 	EmuCtx->CpuInterrupts = malloc(sizeof(PL2_INTERRUPT) * EmuCtx->CpuInterruptCountMax);
 
+	EmuCtx->FdiskData.PhysicalFile = fopen(EMUARG_FDISKNM, "rb+");
+	DWORD Attempt = 0;
+	while (!EmuCtx->FdiskData.PhysicalFile) { // pretty good
+		Attempt++;
+		char AttemptStr[6] = "00000";
+		char FullName[20] = EMUARG_FDISKNM;
+
+		int Attempt5 = (Attempt / 10000) % 10;
+		int Attempt4 = (Attempt / 1000) % 10;
+		int Attempt3 = (Attempt / 100) % 10;
+		int Attempt2 = (Attempt / 10) % 10;
+		int Attempt1 = (Attempt / 1) % 10;
+		AttemptStr[0] += Attempt5;
+		AttemptStr[1] += Attempt4;
+		AttemptStr[2] += Attempt3;
+		AttemptStr[3] += Attempt2;
+		AttemptStr[4] += Attempt1;
+		memcpy(FullName + 11, AttemptStr, 5);
+		EmuCtx->FdiskData.PhysicalFile = fopen(FullName, "rb+");
+	}
+
 	return;
 }
 
@@ -115,6 +136,7 @@ void EmuShutdown(void) {
 		SDL_DestroyWindow(EmuCtx->EmuWindow);
 		SDL_DetachThread(EmuCtx->EmuThread);
 		SDL_DetachThread(EmuCtx->EmuInterruptThread);
+		fclose(EmuCtx->FdiskData.PhysicalFile);
 
 		free(EmuCtx);
 	}
