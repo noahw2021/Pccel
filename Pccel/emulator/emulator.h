@@ -110,6 +110,9 @@ typedef struct _CCEL_EMUCTX {
 		DWORD64 Command;
 		DWORD64 Data;
 		DWORD64 Outbuf;
+
+		BYTE InterruptKeyDown;
+		BYTE InterruptKeyUp;
 	}KeybData;
 }CCEL_EMUCTX, *PCCEL_EMUCTX;
 

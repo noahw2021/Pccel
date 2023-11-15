@@ -25,21 +25,34 @@ void EmudKeyboardSendCommand(DWORD Device, DWORD64 Command) {
 }
 
 void EmudKeyboardSendData(DWORD Device, DWORD64 Command) {
+	switch (EmuCtx->KeybData.Command) {
+	case 0x00: // Set key down interrupt
+		EmuCtx->KeybData.InterruptKeyDown = Command;
+		break;
+	case 0x01: // Set key up interrupt
+		EmuCtx->KeybData.InterruptKeyUp = Command;
+		break;
+	}
 
+	return;
 }
 
 DWORD64	EmudKeyboardGetData(DWORD Device) {
-
+	return EmuCtx->KeybData.Outbuf;
 }
 
 void EmudKeyboardReset(DWORD Device) {
-
+	return;
 }
 
 void EmudKeyboardOff(DWORD Device) {
-
+	PPL2_DEVICE KeybDevice = &EmuCtx->DeviceList[1];
+	KeybDevice->Flags.On = 0;
+	return;
 }
 
 void EmudKeyboardOn(DWORD Device) {
-
+	PPL2_DEVICE KeybDevice = &EmuCtx->DeviceList[1];
+	KeybDevice->Flags.On = 1;
+	return;
 }
