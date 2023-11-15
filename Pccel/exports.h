@@ -1,7 +1,7 @@
 #pragma once
 /*
 exports.h
-Pccl
+Pccel
 
 PLASM2 Compiled C Emulation Layer
 (c) Noah Wooten 2023, All Rights Reserved
@@ -51,7 +51,18 @@ typedef struct _PL2_CONTEXT {
 				__int64 StackPointerLowerBound;
 				__int64 PageMaxLocation;
 
-				__int64 Reserved[2];
+				union {
+					__int64 Reserved0;
+					struct {
+						__int64 InterruptReturn : 1;
+						__int64 InInterrupt : 1;
+						__int64 InTable : 1;
+
+						__int64 Reserved : 61;
+					};
+				}PccelFlags;
+
+				__int64 Reserved[1];
 			}System;
 		};
 	};
