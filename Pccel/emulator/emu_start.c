@@ -62,6 +62,7 @@ void EmuInit(void) {
 	KbDevice->Callbacks[4] = EmudKeyboardReset;
 	KbDevice->Callbacks[5] = EmudKeyboardOff;
 	KbDevice->Callbacks[6] = EmudKeyboardOn;
+	EmuCtx->EmuKeyState = EmuCtx->PhysicalMemory + 0x23F0;
 
 	// Create Fixed Disk Controller Device
 	PPL2_DEVICE FdiskDevice = &EmuCtx->DeviceList[2];
@@ -95,6 +96,9 @@ void EmuInit(void) {
 	EmuCtx->CpuCurrentNs = Time.QuadPart;
 	EmuCtx->EmuInterruptThread = SDL_CreateThread(EmuInterruptThread, "PCCELInterruptThread", NULL);
 	EmuCtx->CpuPhysicalThread = GetCurrentThread();
+
+	EmuCtx->CpuInterruptCountMax = 256;
+	EmuCtx->CpuInterrupts = malloc(sizeof(PL2_INTERRUPT) * EmuCtx->CpuInterruptCountMax);
 
 	return;
 }
@@ -162,7 +166,24 @@ void EmuInterruptThread(void) {
 				SetThreadContext(EmuCtx->CpuPhysicalThread, &EmuCtx->CpuPreIntContext);
 				Ctx->System.PccelFlags.InInterrupt = 0;
 				Ctx->System.PccelFlags.InterruptReturn = 0;
-				continue;
+			}
+			continue;
+		}
+
+		if (EmuCtx->CpuInterruptCount) {
+			for (int i = EmuCtx->CpuInterruptCount - 1; i >= 0; i--) {
+				PPL2_INTERRUPT ThisInt = &EmuCtx->CpuInterrupts[i];
+
+				SuspendThread(EmuCtx->CpuPhysicalThread);
+				GetThreadContext(EmuCtx->CpuPhysicalThread, &EmuCtx->CpuPreIntContext);
+#ifdef _WIN64
+				EmuCtx->CpuIntContext.Rcx = ThisInt->Interrupt;
+#else
+				EmuCtx->CpuIntContext.Ecx = ThisInt->Interrupt;
+#endif
+				EmuPushStack(ThisInt->Argument);
+				SetThreadContext(EmuCtx->CpuPhysicalThread, &EmuCtx->CpuIntContext);
+				Ctx->System.PccelFlags.InInterrupt = 1;
 			}
 		}
 

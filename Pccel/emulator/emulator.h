@@ -68,13 +68,19 @@ typedef struct _PL2_DEVICE {
 	}Flags;
 }PL2_DEVICE, *PPL2_DEVICE;
 
+typedef struct _PL2_INTERRUPT {
+	BYTE Interrupt;
+	DWORD64 Argument;
+	CONTEXT OldThreadCtx;
+}PL2_INTERRUPT, *PPL2_INTERRUPT;
+
 typedef struct _CCEL_EMUCTX {
 	SDL_Window* EmuWindow;
 	SDL_Renderer* EmuRenderer;
 	SDL_Thread* EmuThread;
 	SDL_Thread* EmuInterruptThread;
 	BOOLEAN EmuPauseDrawing;
-	BOOLEAN EmuKeyState[256];
+	PBOOLEAN EmuKeyState;
 	BOOLEAN EmuKeyStateChange[256];
 	DWORD ScreenSizeX, ScreenSizeY;
 
@@ -82,7 +88,10 @@ typedef struct _CCEL_EMUCTX {
 	HANDLE CpuPhysicalThread;
 	CONTEXT CpuPreIntContext;
 	CONTEXT CpuIntContext;
-	
+	DWORD32 CpuInterruptCount;
+	DWORD32	CpuInterruptCountMax;
+	PPL2_INTERRUPT CpuInterrupts;
+
 	PBYTE PhysicalMemory;
 	PPL2_PAGE ActivePageTable;
 	DWORD ActivePTEntryCount;
@@ -96,6 +105,12 @@ typedef struct _CCEL_EMUCTX {
 		DWORD64 Data;
 		DWORD64 Outbuf;
 	}VideoData;
+
+	struct {
+		DWORD64 Command;
+		DWORD64 Data;
+		DWORD64 Outbuf;
+	}KeybData;
 }CCEL_EMUCTX, *PCCEL_EMUCTX;
 
 extern PPL2_CONTEXT Ctx;
