@@ -10,10 +10,12 @@ PLASM2 Compiled C Emulation Layer
 #include "../exports.h"
 #include <SDL.h>
 #include <Windows.h>
+#include <stdio.h>
 
 #define EMUARG_RAMSIZE 1048576
 #define EMUARG_INTTMNS 10000
 #define EMUARG_CLCKINT 0x00
+#define EMUARG_FDISKNM "pccel_disk.bin"
 
 #define DEVTYPE_KB			0x10000001
 #define DEVTYPE_MOUSE		0x10000002
@@ -114,6 +116,17 @@ typedef struct _CCEL_EMUCTX {
 		BYTE InterruptKeyDown;
 		BYTE InterruptKeyUp;
 	}KeybData;
+
+	struct {
+		DWORD64 Command;
+		DWORD64 Data;
+		DWORD64 Outbuf;
+
+		FILE* PhysicalFile;
+		DWORD64 FilePointer;
+		BYTE DisableIncrement;
+		BYTE SkipIncrement;
+	}FdiskData;
 }CCEL_EMUCTX, *PCCEL_EMUCTX;
 
 extern PPL2_CONTEXT Ctx;
@@ -150,5 +163,3 @@ DWORD64	EmudFdiskGetData(DWORD Device);
 void	EmudFdiskReset(DWORD Device);
 void	EmudFdiskOff(DWORD Device);
 void	EmudFdiskOn(DWORD Device);
-DWORD64 EmudFdiskDevCount(void);
-

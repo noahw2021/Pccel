@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.c" />
+    <ClCompile Include="emulator\emu_fdisk.c" />
     <ClCompile Include="emulator\emu_keyb.c" />
     <ClCompile Include="emulator\emu_start.c" />
     <ClCompile Include="emulator\emu_video.c" />
