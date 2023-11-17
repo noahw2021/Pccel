@@ -15,7 +15,17 @@ PLASM2 Compiled C Emulation Layer
 PPL2_CONTEXT Ctx;
 PCCEL_EMUCTX EmuCtx;
 
+LONG ExceptionHandler(
+	PEXCEPTION_POINTERS ExceptionInfo
+);
+
 void EmuInit(void) {
+	AllocConsole();
+	SetConsoleTitleA("PCCEL Debug Console");
+	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+
+	printf("[+] PCCEL Instance Created.\n");
+
 	Ctx = malloc(sizeof(PL2_CONTEXT));
 	memset(Ctx, 0, sizeof(PL2_CONTEXT));
 
@@ -121,6 +131,7 @@ void EmuInit(void) {
 		EmuCtx->FdiskData.PhysicalFile = fopen(FullName, "rb+");
 	}
 
+	AddVectoredExceptionHandler(TRUE, ExceptionHandler);
 	return;
 }
 
@@ -251,4 +262,17 @@ void EmuInterruptThread(void) {
 	}
 
 	return;
+}
+
+LONG ExceptionHandler (
+	PEXCEPTION_POINTERS ExceptionInfo
+) {
+	if (ExceptionInfo->ExceptionRecord->ExceptionCode == STATUS_ACCESS_VIOLATION) {
+		printf("Type: %i\n", ExceptionInfo->ExceptionRecord->ExceptionFlags);
+		printf("Rax: 0x%016llX\n", ExceptionInfo->ContextRecord->Rax);
+		printf("Rbx: 0x%016llX\n", ExceptionInfo->ContextRecord->Rbx);
+		printf("Rcx: 0x%016llX\n", ExceptionInfo->ContextRecord->Rcx);
+		printf("Rdx: 0x%016llX\n", ExceptionInfo->ContextRecord->Rdx);
+	}
+	return EXCEPTION_CONTINUE_SEARCH;
 }

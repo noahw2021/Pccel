@@ -31,7 +31,7 @@ typedef struct _PL2_CONTEXT {
 				__int64 GPRs[16];
 				__int64 Special[16];
 			};
-		};
+		}AllRegisters;
 		struct {
 			__int64 GPRs[16];
 			__int64 Ip;
