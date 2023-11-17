@@ -9,6 +9,14 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.tlog
+*.idb
+*.lastbuildstate
+unsuccessfulbuild
+*.recipe
+*.exp
+SDL2.dll
+*.txt
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -17,14 +25,12 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x86/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
 bld/
 [Bb]in/
 [Oo]bj/
