@@ -1,6 +1,8 @@
 # Pccel
 PLASM2 Compiled C Emulation Layer for Win32/MSVC CRT
 
+Archived 12/24/23, not good enough code for my likikng.
+
 ## What is this
 This is a C library that exports function as instrinsics to be used for the PLASM2 operating system, moth. I plan on developing this in Visual Studio, and this library acts as a translation library that can have Win32 code simulating a PLASM2 cpu instance. This does not execute any PLASM2 code, but just implements the entire standard. This is a fast developed project, and just designed to "work", and the quality of code is subpar to my standards. I will fix this later, however I'd like to start working on current projects.
 
